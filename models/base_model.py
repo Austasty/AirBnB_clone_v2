@@ -46,7 +46,9 @@ class BaseModel:
                                          self.__dict__)
 
     def save(self):
-        """updates the attribute 'updated_at' with the current datetime field"""
+        """
+        updates the attribute 'updated_at'
+        with the current datetime field"""
         self.updated_at = datetime.now()
         models.storage.new(self)
         models.storage.save()
@@ -72,5 +74,6 @@ class BaseModel:
         return new_dict
 
     def delete(self):
-        """Delete current instance from storage by calling of the delete method"""
+        """Delete current instance from
+        storage by calling of the delete method"""
         models.storage.delete(self)
