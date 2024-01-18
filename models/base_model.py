@@ -12,16 +12,19 @@ from os import getenv
 
 time_fmt = "%Y-%m-%dT%H:%M:%S.%f"
 
-Base = declarative_base()
-
+if getenv("HBNB_TYPE_STORAGE") == 'db':
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
     """The BaseModel class where other classes will be derived"""
 
-    id = Column(String(60), nullable=False, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    if getenv("HBNB_TYPE_STORAGE") == 'db':
+        id = Column(String(60), nullable=False, primary_key=True)
+        created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+        updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
@@ -43,8 +46,7 @@ class BaseModel:
                                          self.__dict__)
 
     def save(self):
-        """
-        updates the attribute 'updated_at'
+        """updates the attribute 'updated_at'
         with the current datetime field"""
         self.updated_at = datetime.now()
         models.storage.new(self)
@@ -71,6 +73,6 @@ class BaseModel:
         return new_dict
 
     def delete(self):
-        """Delete current instance from
-        storage by calling of the delete method"""
+        """Delete current instance from storage by
+           calling of the delete method"""
         models.storage.delete(self)
